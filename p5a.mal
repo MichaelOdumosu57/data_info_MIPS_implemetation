@@ -13,9 +13,12 @@ main:     la       $a0, prompt  #Start address of output string.
 
           li       $v0, 5       # 5 represents read_int command.
           syscall               # The integer is read into $v0.
+          
+          move     $16, $0     #$16 will contain the sum.
+          add      $16, $16, $v0
 
-          la      $a0, il         #Start addr of prompt string.
-          li      $v0, 4            #print_string command.
+          move     $a0, $16          #Start addr of prompt string.
+          li       $v0, 1            #print_int command.
           syscall
           
           la      $a0, nl         #Start addr of prompt string.
