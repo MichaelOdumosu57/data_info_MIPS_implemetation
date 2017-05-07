@@ -1,0 +1,5 @@
+          .data
+
+prompt:   .asciiz  "Type an integer: "
+sum_str:  .asciiz  "Sum = "
+nl:       .asciiz  "\n"       # String with newline character.
