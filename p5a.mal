@@ -1,5 +1,27 @@
           .data
 
 prompt:   .asciiz  "Type an integer: "
-sum_str:  .asciiz  "Sum = "
 nl:       .asciiz  "\n"       # String with newline character.
+il:       .word     22        # probably inits to zero
+
+          .text
+          .globl   main
+
+main:     la       $a0, prompt  #Start address of output string.
+          li       $v0, 4
+          syscall
+
+          li       $v0, 5       # 5 represents read_int command.
+          syscall               # The integer is read into $v0.
+
+          la      $a0, il         #Start addr of prompt string.
+          li      $v0, 4            #print_string command.
+          syscall
+          
+          la      $a0, nl         #Start addr of prompt string.
+          li      $v0, 4          #print_string command.
+          syscall
+
+
+          li       $v0, 10    #exit command.
+          syscall
