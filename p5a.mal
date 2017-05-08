@@ -1,30 +1,50 @@
-          .data
+                .data
 
-prompt:   .asciiz  "Type an integer: "
-nl:       .asciiz  "\n"       # String with newline character.
-il:       .word     22        # probably inits to zero
+prompt:         .asciiz  "Type an integer: "
+string_i:       .asciiz  "The number of 1's in the right half of the binary representation of the given integer ="
+string_ii:      .asciiz  "The number of 0's in the left half of the binary representation of the given integer ="
+string_iii:     .asciiz  "The largest power of 2 that evenly divides the given integer = "
+string_iv:      .asciiz  "The value of the largest digit in the decimal representation of the given integer = "
+nl:             .asciiz  "\n"       # String with newline character.
+il:             .word     0        # probably inits to zero
 
-          .text
-          .globl   main
+                .text
+                .globl   main
 
-main:     la       $a0, prompt  #Start address of output string.
-          li       $v0, 4
-          syscall
+main:           la       $a0, prompt  #Start address of output string.
+                li       $v0, 4
+                syscall
 
-          li       $v0, 5       # 5 represents read_int command.
-          syscall               # The integer is read into $v0.
+                li       $v0, 5         # 5 represents read_int command.
+                syscall                  # The integer is read into $v0.
           
-          move     $16, $0     #$16 will contain the sum.
-          add      $16, $16, $v0
+                move     $16, $0        #$16 will contain the number
+                add      $16, $16, $v0
 
-          move     $a0, $16          #Start addr of prompt string.
-          li       $v0, 1            #print_int command.
-          syscall
+                sw     $s1,il
+
+                
+
+loop:           rol $16, $16, 1    # Roll the bits left by one bit - wraps highest bit to lowest bit.
+                and $t0, $16, 1    # Mask off low bit (logical AND with 000...0001)
+                addi $t0, $t0, 48   # Combine it with ASCII code for '0', becomes 0 or 1
+            
+                move $a0, $t0      # Output the ASCII character
+                li $v0, 11
+                syscall
+            
+                addi $s1, $s1, 1   # Increment loop counter
+                bne $s1, 32, loop  # Keep looping if loop counter is not 32
+
+
+                                   #move     $a0, $16          #Start addr of prompt string.
+                                   #li       $v0, 1            #print_int command.
+                                   #syscall
           
-          la      $a0, nl         #Start addr of prompt string.
-          li      $v0, 4          #print_string command.
-          syscall
+                la      $a0, nl         #Start addr of prompt string.
+                li      $v0, 4          #print_string command.
+                syscall
 
 
-          li       $v0, 10    #exit command.
-          syscall
+                li       $v0, 10    #exit command.
+                syscall
