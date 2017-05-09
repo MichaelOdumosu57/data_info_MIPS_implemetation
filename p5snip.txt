@@ -155,3 +155,65 @@ end_if_h:        move       $s3, $s2
                  li         $t1, 0
 end_smaller:
 end_min_len:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+               la        $s0, inchar
+                lbu       $s1, whitespace     #trying to compaer against whitespace
+                li        $s2, 0         #tring to get count for max len of word
+                li        $s3, 0         #tring to get max length of word
+                la        $s4, array     #array holder to print later
+
+
+
+loop_v:          lbu        $t0, ($s0)
+
+                 beq        $t0,$s1,max_word
+
+end_if_v:        addi       $s2,$s2,1
+                 lbu        $s4,($s0)
+                 addi       $s4, $s4, 1
+max_word:
+
+                 bne        $t0,$s1,refresh
+
+end_if_k:        li         $s2, -2
+refresh:
+
+                
+                 bgt        $s3, $s2, word_max
+
+end_if_j:        move       $a0, $t0        #after conditionals prints largest word
+                 li         $v0, 11         #print char command
+                 syscall
+word_max:
+                
+
+                 addi       $s0, $s0, 1
+                
+                 bnez       $t0,loop_v
+
+newline:          la       $a0, nl           #start newline print
+                  li       $v0, 4            #print_string command.
+                  syscall
+                  jr       $ra

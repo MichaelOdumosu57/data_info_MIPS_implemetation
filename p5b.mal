@@ -16,7 +16,7 @@ nl:             .asciiz  "\n"      # String with newline character.
                 .globl   main
 
 
-#reading the string
+#reading the string and initialization
 main:             li       $v0, 4        #Command for print string.
                   la       $a0, prompt   #Start addr. of prompt string.
                   syscall
@@ -26,6 +26,9 @@ main:             li       $v0, 4        #Command for print string.
                   li       $a1, 80     #Max. no. of characters (incl. newline)
                                         
                   syscall
+                  la       $s6,array
+                  la       $s7,array
+
 
 #part_1
 
@@ -95,25 +98,8 @@ num_words:
                 li        $s3, 0             #tring to get max length of word
 
 
-                
-
-
-
 loop_iii:
                  lbu        $t0, ($s0)                  #gets the string
-                 move       $a0, $t0
-                 li         $v0, 11
-                 syscall
-
-                 move       $a0, $s0
-                 li         $v0, 1
-                 syscall
-
-
-                  la       $a0, nl           #start newline print
-                  li       $v0, 4            #print_string command.
-                  syscall
-
 
                  beq        $t0,$s1,max_length          #if char index is not a space
 
@@ -142,14 +128,8 @@ max_len:
 
 
                  addi       $s0, $s0, 1
-                 bnez        $t0, loop_iii
-
-
-
-
-
-
-
+                 addi       $s6, $s6, 1
+                 bnez       $t0, loop_iii
 
 
 
@@ -181,27 +161,12 @@ max_len:
 loop_iv:
                  lbu        $t0, ($s0)                  #gets the string
 
-
-                 move       $a0, $t0
-                 li         $v0, 11
-                 syscall
-
-
-
-
-                  la       $a0, nl           #start newline print
-                  li       $v0, 4            #print_string command.
-                  syscall
-
-
                  beq        $t0,$s1,min_length          #if char index is not a space
 
 end_if_iv:       addi       $s2,$s2,1
                  li         $t1, 0
 min_length:
-                 move       $a0, $s2
-                 li         $v0, 1
-                 syscall
+
 
 
                  bne        $t0,$s1,remake            #if char index is  a space
@@ -249,13 +214,12 @@ min_len:
 
 
 #part 5
-
                 la        $s0, inchar
                 lbu       $s1, whitespace     #trying to compaer against whitespace
                 li        $s2, 0         #tring to get count for max len of word
                 li        $s3, 0         #tring to get max length of word
                 la        $s4, array     #array holder to print later
-
+ 
 
                 la      $a0, string_v        #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
@@ -272,7 +236,7 @@ max_word:
 
                  bne        $t0,$s1,refresh
 
-end_if_k:        li         $s2, -2
+end_if_k:        li         $s2, 0
 refresh:
 
                 
@@ -291,40 +255,54 @@ word_max:
 
 
 
-                la       $a0, nl           #start newline print
-                li       $v0, 4            #print_string command.
-                syscall
 
 #part_6
+
+                la        $s0, inchar
+                lbu       $s1, whitespace     #trying to compaer against whitespace
+                li        $s2, 0         #tring to get count for max len of word
+                li        $s3, 0         #tring to get max length of word
+                la        $s4, array     #array holder to print later
+ 
+
                 la      $a0, string_vi        #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
                 syscall
 
+loop_vi:          lbu        $t0, ($s0)
+
+                 beq        $t0,$s1,min_word
+
+end_if_vi:        addi       $s2,$s2,1
+                 lbu        $s4,($s0)
+                 addi       $s4, $s4, 1
+min_word:
+
+                 bne        $t0,$s1,retact
+
+end_if_w:        li         $s2, 0
+retact:
+
+                
+                 ble        $s3, $s2, word_min
+
+end_if_z:        move       $a0, $t0        #after conditionals prints largest word
+                 li         $v0, 11         #print char command
+                 syscall
+word_min:
+                
+
+                 addi       $s0, $s0, 1
+                
+                 bnez       $t0,loop_vi
+
+
+
                 la       $a0, nl           #start newline print
                 li       $v0, 4            #print_string command.
                 syscall
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-newline:          la       $a0, nl           #start newline print
-                  li       $v0, 4            #print_string command.
-                  syscall
-                  jr       $ra
-
-            
-
-                  beq      $s0,$s0, main
                   li       $v0, 10    #exit command.
                   syscall
