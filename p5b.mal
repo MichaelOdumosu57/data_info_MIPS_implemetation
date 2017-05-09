@@ -8,6 +8,7 @@ string_iii:     .asciiz  "Maximum length of a word:"
 string_iv:      .asciiz  "Minimun length of a word:"
 string_v:       .asciiz  "Word of maximum length:"
 string_vi:      .asciiz  "Word of minimun length:"
+whitespace:     .asciiz  " "
 nl:             .asciiz  "\n"      # String with newline character.
 
                 .text
@@ -22,21 +23,78 @@ main:             li       $v0, 4        #Command for print string.
                   li       $a1, 80     #Max. no. of characters (incl. newline)
                                         
                   syscall
+
         
 
+                  la        $s0, inchar         #tring to get index of sting at
+                  la        $s1, whitespace     #trying to compaer against whitespace
+                  li        $s2, 0
+ 
+loop:             lbu        $t0, ($s0)
+                  beq        $t0,$s1, num_spaces
 
-                  la $s0, inchar         #tring to get index of sting at 0
-                  lb $a0, ($s0)
-                  li $v0, 11
-                  syscall
+end_if:           addi       $s2,$s2,1
+num_spaces:
+
+                  addi       $s0, $s0, 1
+                  bnez       $t0,loop
             
-                  #jal      newline              #function call to print newline
+                #jal      newline              #function call to print newline
 
 
 
+                la      $a0, string_i        #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
+
+                move    $a0, $s2        #Start addr of left statement.
+                li      $v0, 1                 #print_string command.
+                syscall
 
 
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
 
+                la      $a0, string_ii       #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
+
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
+
+                la      $a0, string_iii        #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
+
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
+
+                la      $a0, string_iv      #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
+
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
+
+                la      $a0, string_v        #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
+
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
+
+                la      $a0, string_vi        #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
+
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
 
 
 
