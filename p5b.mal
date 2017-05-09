@@ -44,8 +44,8 @@ num_spaces:
                 li      $v0, 4                 #print_string command.
                 syscall
 
-                move    $a0, $s2        #Start addr of left statement.
-                li      $v0, 1                 #print_string command.
+                move    $a0, $s2        #Start addr of result.
+                li      $v0, 1                 #print_int command.
                 syscall
 
                 la       $a0, nl           #start newline print
@@ -53,9 +53,17 @@ num_spaces:
                 syscall
 
 #part_2
-                  la        $s0, inchar         #tring to get index of sting at
-                  li        $s2, 1
-            
+                  la        $s0, inchar
+                  li        $s2, 1         #tring to get amount of words
+  
+loop_ii:          lbu        $t0, ($s0)
+                  bne        $t0,$s1, num_words
+
+end_if_ii:        addi       $s2,$s2,1
+num_words:
+
+                  addi       $s0, $s0, 1
+                  bnez       $t0,loop_ii
 
 
 
@@ -63,6 +71,10 @@ num_spaces:
 
                 la      $a0, string_ii       #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
+                syscall
+
+                move    $a0, $s2        #Start addr of result.
+                li      $v0, 1                 #print_int command.
                 syscall
 
                 la       $a0, nl           #start newline print
