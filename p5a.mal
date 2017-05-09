@@ -27,25 +27,20 @@ main:           la       $a0, prompt  #Start address of output string.
                 sw     $s1,il           #will contain count for retrieving 32 bits
                 sw     $s2, left_count  #will contain the count for number of zeroes on left
                 sw     $s3, right_count  #will contain the count for number of ones on right
-                la     $s4, test         #will contain test number for count increment
+                move   $s4, $16         #will contain test number for count increment
+                move   $s6, $16         #will contain test number for count increment
 
                 move   $s5, $0           #will contain test should be zero
                 rol    $s5, $s5, 1
                 and    $s5, $s5, 1
                 addi   $s5, $s5, 48
 
-                move $a0, $s5      # Output the ASCII character
-                li   $v0, 11
-                syscall
-
-                la       $a0, nl           #start newline print
-                li       $v0, 4            #print_string command.
-                syscall
                 
 
 loop:           rol  $16, $16, 1    # Roll the bits left by one bit - wraps highest bit to lowest bit.
                 and  $t0, $16, 1    # Mask off low bit (logical AND with 000...0001)
                 addi $t0, $t0, 48   # Combine it with ASCII code for '0', becomes 0 or 1
+                move $s6, $t0       #save to check if an odd number
                 
                 
                 ble $s1,15,  end_if     #if counter is greater or equal then 16 right bit evaluation
@@ -58,12 +53,32 @@ end_if:
 Then:           add $s2,$s2, 1
 End_if:
             
-                move $a0, $t0      # Output the ASCII character
-                li   $v0, 11
-                syscall
+
+                div $s4,$s4,2
+
             
+                bne $s4, 1, elses
+                
+power:          move $s7, $s1
+elses:
                 addi $s1, $s1, 1   # Increment loop counter
                 bne $s1, 32, loop  # Keep looping if loop counter is not 32
+
+
+
+
+
+                beq $s6, $s5, else
+                
+odd_one:        move $s5, $zero
+else:
+
+                bne $s6, $s5, else_if
+                
+even_one:        move $s5, $16
+else_if:
+
+
 
 
 
@@ -96,7 +111,27 @@ End_if:
                 li       $v0, 4            #print_string command.
                 syscall
                 
+                la      $a0, string_iii        #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
                 
+
+                move    $a0, $s7        #Start addr of left statement.
+                li      $v0, 1                 #print_int command.
+                syscall
+                
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
+
+                la      $a0, string_iv        #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
+                
+
+                move    $a0, $s7        #Start addr of left statement.
+                li      $v0, 1                 #print_int command.
+                syscall
                 
 
 
