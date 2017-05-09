@@ -1,0 +1,130 @@
+
+while_iii:       lbu        $t0, ($s4)                  #gets the string
+ 
+                 beq        $t0,$s1,max_length_iii          #if char index is not a space
+
+if_iii:          addi       $s2,$s2,1
+                 li         $t1, 0
+max_length_iii:
+
+
+                 bne        $t0,$s1,restart_iii            #if char index is  a space
+
+if_iii_iii:      li         $t1, 2                   # flag for max len conditional
+restart_iii:
+
+                 bne        $t1,2, max_len_iii          #flag if we have finished the word
+
+if_a:            move       $s3, $s2
+                 li         $s2, 0
+max_len_iii:
+
+
+
+
+                 addi       $s4, $s4, 1
+                 bnez       $t0,while_iii
+
+                 bne        $t1,2, max_len_iii          #flag if we have finished the word
+
+if_a:            move       $s3, $s2
+                 li         $s2, 0
+max_len_iii:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+while_iii:       lbu        $t0, ($s4)                  #gets the string
+ 
+                 beq        $t0,$s1,max_length_iii          #if char index is not a space
+
+if_iii:          addi       $s2,$s2,1
+                 li         $t1, 0
+max_length_iii:
+
+
+                 bne        $t0,$s1,restart_iii            #if char index is  a space
+
+if_iii_iii:      li         $t1, 2                   # flag for max len conditional
+restart_iii:
+
+                 bne        $t1,2, max_len_iii          #flag if we have finished the word
+
+if_a:            move       $s3, $s2
+                 li         $s2, 0
+max_len_iii:
+
+
+
+
+
+
+                 addi       $s4, $s4, 1
+                 bnez       $t0,while_iii
+
+
+
+
+
+
+
+
+
+
+
+
+while_iii:       lbu        $t0, ($s4)                  #gets the string
+                 move       $a0, $t0
+                 li         $v0, 11
+                 syscall
+
+                 move       $a0, $s0
+                 li         $v0, 1
+                 syscall
+
+                  la       $a0, nl           #start newline print
+                  li       $v0, 4            #print_string command.
+                  syscall
+
+
+
+
+                 beq        $t0,$s1,max_length_iii          #if char index is not a space
+
+if_iii:          addi       $s2,$s2,1
+                 li         $t1, 0
+max_length_iii:
+
+
+                 bne        $t0,$s1,restart_iii            #if char index is  a space
+
+if_iii_iii:      li         $t1, 2                   # flag for max len conditional
+restart_iii:
+
+                 bne        $t1,2, max_len_iii          #flag if we have finished the word
+
+if_a:            move       $s3, $s2
+                 li         $s2, -2
+                 li         $t1, 0
+max_len_iii:
+
+
+                 addi       $s4, $s4, 1
+                 bnez       $t0,while_iii

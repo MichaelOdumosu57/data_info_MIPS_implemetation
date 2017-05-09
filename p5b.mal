@@ -9,11 +9,14 @@ string_iv:      .asciiz  "Minimun length of a word:"
 string_v:       .asciiz  "Word of maximum length:"
 string_vi:      .asciiz  "Word of minimun length:"
 whitespace:     .asciiz  " "
+check_string:   .asciiz  " a"
 nl:             .asciiz  "\n"      # String with newline character.
 
                 .text
                 .globl   main
 
+
+#reading the string
 main:             li       $v0, 4        #Command for print string.
                   la       $a0, prompt   #Start addr. of prompt string.
                   syscall
@@ -24,7 +27,7 @@ main:             li       $v0, 4        #Command for print string.
                                         
                   syscall
 
-        
+#part_1
 
                   la        $s0, inchar         #tring to get index of sting at
                   lbu       $s1, whitespace     #trying to compaer against whitespace
@@ -54,6 +57,7 @@ num_spaces:
 
 #part_2
                   la        $s0, inchar
+                  #add       $s0,$s0,$s1                 #trying to append seal case to max len
                   li        $s2, 1         #tring to get amount of words
   
 loop_ii:          lbu        $t0, ($s0)
@@ -86,30 +90,71 @@ num_words:
 #part 3
 
                 la        $s0, inchar
-                li        $s2, -2         #tring to get count for max len of word
-                li        $s3, 0         #tring to get max length of word
+                lbu       $s1, whitespace     #trying to compaer against whitespace
+                li        $s2, 0            #tring to get count for max len of word
+                li        $s3, 0             #tring to get max length of word
+
+
+                
 
 
 
-loop_iii:        lbu        $t0, ($s0)
+loop_iii:        lbu        $t0, ($s0)                  #gets the string
+                 move       $a0, $t0
+                 li         $v0, 11
+                 syscall
 
-                 beq        $t0,$s1,max_length
+                 move       $a0, $s0
+                 li         $v0, 1
+                 syscall
+
+
+                  la       $a0, nl           #start newline print
+                  li       $v0, 4            #print_string command.
+                  syscall
+
+
+                 beq        $t0,$s1,max_length          #if char index is not a space
 
 end_if_iii:      addi       $s2,$s2,1
+                 li         $t1, 0
 max_length:
 
-                 bne        $t0,$s1,restart
 
-end_if_i:        li         $s2, -2
+                 bne        $t0,$s1,restart            #if char index is  a space
+
+end_if_i:        li         $t1, 2                   # flag for max len conditional
 restart:
 
-                 bgt        $s3, $s2, new_max
+                 bnez        $t0,restart_iii            #if char index is  a space
 
-end_if_x:        move       $s3, $s2
-new_max:
+end_if_c:        li         $t1, 2                   # flag for max len conditional
+restart_iii:
+
+
+                 bne        $t1,2, max_len          #flag if we have finished the word
+
+end_if_a:        bgt        $s3, $s2,move_larger
+end_if_b:        move       $s3, $s2
+                 li         $s2, 0
+                 li         $t1, 0
+move_larger:
+max_len:
+
+
 
                  addi       $s0, $s0, 1
                  bnez       $t0,loop_iii
+
+
+                 move       $a0, $s0
+                 li         $v0, 1
+                 syscall
+
+
+
+
+
 
 
 
@@ -129,8 +174,9 @@ new_max:
 #part 4
 
                 la        $s0, inchar
-                li        $s2, 0         #trying to get count for min len of word
+                li        $s2, -2          #trying to get count for min len of word
                 li        $s3, 0         #trying to get min length of word
+                li        $s4,-2
 
 
 
@@ -176,16 +222,23 @@ reboot:
 #part 5
 
                 la        $s0, inchar
-                li        $s2, -2         #tring to get count for max len of word
+                lbu       $s1, whitespace     #trying to compaer against whitespace
+                li        $s2, 0         #tring to get count for max len of word
                 li        $s3, 0         #tring to get max length of word
+                la        $s4, array     #array holder to print later
 
 
+                la      $a0, string_v        #Start addr of left statement.
+                li      $v0, 4                 #print_string command.
+                syscall
 
 loop_v:          lbu        $t0, ($s0)
 
                  beq        $t0,$s1,max_word
 
 end_if_v:        addi       $s2,$s2,1
+                 lbu        $s4,($s0)
+                 addi       $s4, $s4, 1
 max_word:
 
                  bne        $t0,$s1,refresh
@@ -193,23 +246,21 @@ max_word:
 end_if_k:        li         $s2, -2
 refresh:
 
+                
                  bgt        $s3, $s2, word_max
 
-end_if_j:        move       $a0, $t0
-                
+end_if_j:        move       $a0, $t0        #after conditionals prints largest word
+                 li         $v0, 11         #print char command
+                 syscall
 word_max:
+                
 
                  addi       $s0, $s0, 1
+                
                  bnez       $t0,loop_v
 
 
 
-
-
-
-                la      $a0, string_v        #Start addr of left statement.
-                li      $v0, 4                 #print_string command.
-                syscall
 
                 la       $a0, nl           #start newline print
                 li       $v0, 4            #print_string command.
@@ -245,6 +296,6 @@ newline:          la       $a0, nl           #start newline print
 
             
 
-
+                  beq      $s0,$s0, main
                   li       $v0, 10    #exit command.
                   syscall
