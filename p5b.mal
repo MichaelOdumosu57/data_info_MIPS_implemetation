@@ -27,8 +27,8 @@ main:             li       $v0, 4        #Command for print string.
         
 
                   la        $s0, inchar         #tring to get index of sting at
-                  la        $s1, whitespace     #trying to compaer against whitespace
-                  li        $s2, 0
+                  lbu       $s1, whitespace     #trying to compaer against whitespace
+                  li        $s2, -2
  
 loop:             lbu        $t0, ($s0)
                   beq        $t0,$s1, num_spaces
@@ -38,9 +38,6 @@ num_spaces:
 
                   addi       $s0, $s0, 1
                   bnez       $t0,loop
-            
-                #jal      newline              #function call to print newline
-
 
 
                 la      $a0, string_i        #Start addr of left statement.
@@ -51,10 +48,18 @@ num_spaces:
                 li      $v0, 1                 #print_string command.
                 syscall
 
-
                 la       $a0, nl           #start newline print
                 li       $v0, 4            #print_string command.
                 syscall
+
+#part_2
+                  la        $s0, inchar         #tring to get index of sting at
+                  li        $s2, 1
+            
+
+
+
+
 
                 la      $a0, string_ii       #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
