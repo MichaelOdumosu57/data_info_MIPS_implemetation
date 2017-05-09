@@ -1,0 +1,64 @@
+                .data
+inchar:         .space    80
+prompt:         .asciiz  "Type a string: "
+array:          .byte    0:80
+string_i:       .asciiz  "No. of non-whitespace characters:"
+string_ii:      .asciiz  "Number of words:"
+string_iii:     .asciiz  "Maximum length of a word:"
+string_iv:      .asciiz  "Minimun length of a word:"
+string_v:       .asciiz  "Word of maximum length:"
+string_vi:      .asciiz  "Word of minimun length:"
+nl:             .asciiz  "\n"      # String with newline character.
+
+                .text
+                .globl   main
+
+main:             li       $v0, 4        #Command for print string.
+                  la       $a0, prompt   #Start addr. of prompt string.
+                  syscall
+        
+                  li       $v0, 8       #Command for read string.
+                  la       $a0, inchar  #Buffer
+                  li       $a1, 80     #Max. no. of characters (incl. newline)
+                                        
+                  syscall
+        
+
+
+                  la $s0, inchar         #tring to get index of sting at 0
+                  lb $a0, ($s0)
+                  li $v0, 11
+                  syscall
+            
+                  #jal      newline              #function call to print newline
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+newline:          la       $a0, nl           #start newline print
+                  li       $v0, 4            #print_string command.
+                  syscall
+                  jr       $ra
+
+            
+
+
+                  li       $v0, 10    #exit command.
+                  syscall
