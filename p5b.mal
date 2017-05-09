@@ -81,16 +81,87 @@ num_words:
                 li       $v0, 4            #print_string command.
                 syscall
 
+
+
+#part 3
+
+                la        $s0, inchar
+                li        $s2, -2         #tring to get count for max len of word
+                li        $s3, 0         #tring to get length of word
+
+
+
+loop_iii:        lbu        $t0, ($s0)
+
+                 beq        $t0,$s1,max_length
+
+end_if_iii:      addi       $s2,$s2,1
+max_length:
+
+                 bne        $t0,$s1,restart
+
+end_if_i:        li         $s2, -2
+restart:
+
+                 blt        $s3, $s2, new_max
+
+end_if_x:        move        $3, $s2
+new_max:
+
+                 addi       $s0, $s0, 1
+                 bnez       $t0,loop_iii
+
+
+
                 la      $a0, string_iii        #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
+                syscall
+
+                move    $a0, $s2        #Start addr of result.
+                li      $v0, 1                 #print_int command.
                 syscall
 
                 la       $a0, nl           #start newline print
                 li       $v0, 4            #print_string command.
                 syscall
 
-                la      $a0, string_iv      #Start addr of left statement.
+
+#part 4
+
+                la        $s0, inchar
+                li        $s2, -2         #tring to get count for max len of word
+                li        $s3, 0         #tring to get length of word
+
+
+
+loop_iv:        lbu        $t0, ($s0)
+
+                 beq        $t0,$s1,min_length
+
+end_if_iv:      addi       $s2,$s2,1
+min_length:
+
+                 bne        $t0,$s1,reboot
+
+end_if_d:        li         $s2, -2
+reboot:
+
+                 blt        $s3, $s2, new_min
+
+end_if_y:        move        $3, $s2
+new_min:
+
+                 addi       $s0, $s0, 1
+                 bnez       $t0,loop_iv
+
+
+
+                la      $a0, string_iv        #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
+                syscall
+
+                move    $a0, $s2        #Start addr of result.
+                li      $v0, 1                 #print_int command.
                 syscall
 
                 la       $a0, nl           #start newline print
