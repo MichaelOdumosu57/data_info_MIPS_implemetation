@@ -6,11 +6,11 @@ string_ii:      .asciiz  "The number of 0's in the left half of the binary repre
 string_iii:     .asciiz  "The largest power of 2 that evenly divides the given integer = "
 string_iv:      .asciiz  "The value of the largest digit in the decimal representation of the given integer = "
 #array:          .word    0:31
-nl:             .asciiz  "\n"       # String with newline character.
-il:             .word     0        #  inits to zero
+nl:             .asciiz  "\n"      # String with newline character.
+il:             .word     0        # inits to zero
 left_count:     .word     0        # for the number of zeros on the left side
 right_count:    .word     0        # for the number of ones on the right side
-
+test:           .asciiz   "1"    # test for right and left variables
                 .text
                 .globl   main
 
@@ -24,23 +24,38 @@ main:           la       $a0, prompt  #Start address of output string.
                 move     $16, $0        #$16 will contain the number
                 add      $16, $16, $v0
 
-                sw     $s1,il           #will contain newline
+                sw     $s1,il           #will contain count for retrieving 32 bits
                 sw     $s2, left_count  #will contain the count for number of zeroes on left
                 sw     $s3, right_count  #will contain the count for number of ones on right
+                la     $s4, test         #will contain test number for count increment
+
+                move   $s5, $0           #will contain test should be zero
+                rol    $s5, $s5, 1
+                and    $s5, $s5, 1
+                addi   $s5, $s5, 48
+
+                move $a0, $s5      # Output the ASCII character
+                li   $v0, 11
+                syscall
+
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
                 
 
 loop:           rol  $16, $16, 1    # Roll the bits left by one bit - wraps highest bit to lowest bit.
                 and  $t0, $16, 1    # Mask off low bit (logical AND with 000...0001)
                 addi $t0, $t0, 48   # Combine it with ASCII code for '0', becomes 0 or 1
-
-                ble $s1,15, end_if  #if counter is less then 16 right bit evaluation
-                beq $t0, $zero,then # if bit is equal to zero
-then:           addi $s2,$s2, 1
+                
+                
+                ble $s1,15,  end_if     #if counter is greater or equal then 16 right bit evaluation
+                beq $t0 ,$s5, end_if     # if bit is not equal to zero
+then:           add $s3,$s3, 1
 end_if:
 
-                bgt $s1,15, End_if  #if counter is less then 16 right bit evaluation
-                beq $t0, 1,Then # if bit is equal to zero
-Then:           addi $s3,$s3, 1
+                bgt $s1,15,  End_if  #if counter is less then 16 left bit evaluation
+                bne $t0,$s5 ,End_if    # if bit is  equal to zero
+Then:           add $s2,$s2, 1
 End_if:
             
                 move $a0, $t0      # Output the ASCII character
@@ -53,9 +68,9 @@ End_if:
 
 
 
-                                   
-                                   #li       $v0, 1            #print_int command.
-                                   #syscall
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
           
                 la      $a0, string_ii         #Start addr of right statement.
                 li      $v0, 4                 #print_string command.
@@ -63,6 +78,10 @@ End_if:
 
                 move $a0, $s2           # move $s2 into the system register
                 li   $v0, 1             #print int
+                syscall
+
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
                 syscall
 
                 la      $a0, string_i         #Start addr of left statement.
@@ -73,15 +92,12 @@ End_if:
                 li   $v0, 1             #print int
                 syscall
 
-                addi $s1, $s1, 1   # Increment loop counter
-                
-                
-                
-            
-
-                la      $a0, nl         #Start addr of prompt string.
-                li      $v0, 4          #print_string command.
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
                 syscall
+                
+                
+                
 
 
                 li       $v0, 10    #exit command.
