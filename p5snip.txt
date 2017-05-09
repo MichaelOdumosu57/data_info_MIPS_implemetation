@@ -128,3 +128,30 @@ max_len_iii:
 
                  addi       $s4, $s4, 1
                  bnez       $t0,while_iii
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 bne        $t1,3, end_min_len          #flag if we have finished the sentence
+
+end_if_g:        blt        $s3, $s2, end_smaller
+end_if_h:        move       $s3, $s2
+                 sub        $s3, $s3, 2
+                 li         $s2, 0
+                 li         $t1, 0
+end_smaller:
+end_min_len:

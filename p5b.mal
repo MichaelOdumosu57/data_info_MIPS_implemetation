@@ -7,7 +7,7 @@ string_ii:      .asciiz  "Number of words:"
 string_iii:     .asciiz  "Maximum length of a word:"
 string_iv:      .asciiz  "Minimun length of a word:"
 string_v:       .asciiz  "Word of maximum length:"
-string_vi:      .asciiz  "Word of minimun length:"
+string_vi:      .asciiz  "Word of minimum length:"
 whitespace:     .asciiz  " "
 check_string:   .asciiz  " a"
 nl:             .asciiz  "\n"      # String with newline character.
@@ -99,7 +99,8 @@ num_words:
 
 
 
-loop_iii:        lbu        $t0, ($s0)                  #gets the string
+loop_iii:
+                 lbu        $t0, ($s0)                  #gets the string
                  move       $a0, $t0
                  li         $v0, 11
                  syscall
@@ -126,10 +127,7 @@ max_length:
 end_if_i:        li         $t1, 2                   # flag for max len conditional
 restart:
 
-                 bnez        $t0,restart_iii            #if char index is  a space
 
-end_if_c:        li         $t1, 2                   # flag for max len conditional
-restart_iii:
 
 
                  bne        $t1,2, max_len          #flag if we have finished the word
@@ -144,12 +142,9 @@ max_len:
 
 
                  addi       $s0, $s0, 1
-                 bnez       $t0,loop_iii
+                 bnez        $t0, loop_iii
 
 
-                 move       $a0, $s0
-                 li         $v0, 1
-                 syscall
 
 
 
@@ -174,30 +169,60 @@ max_len:
 #part 4
 
                 la        $s0, inchar
-                li        $s2, -2          #trying to get count for min len of word
-                li        $s3, 0         #trying to get min length of word
-                li        $s4,-2
+                lbu       $s1, whitespace     #trying to compaer against whitespace
+                li        $s2, 0            #tring to get count for min len of word
+                li        $s3, 80             #tring to get min length of word, must be greater than input buffer
+
+
+                
 
 
 
-loop_iv:        lbu        $t0, ($s0)
+loop_iv:
+                 lbu        $t0, ($s0)                  #gets the string
 
-                beq        $t0,$s1,min_length
 
-end_if_iv:      addi       $s2,$s2,1
+                 move       $a0, $t0
+                 li         $v0, 11
+                 syscall
+
+
+
+
+                  la       $a0, nl           #start newline print
+                  li       $v0, 4            #print_string command.
+                  syscall
+
+
+                 beq        $t0,$s1,min_length          #if char index is not a space
+
+end_if_iv:       addi       $s2,$s2,1
+                 li         $t1, 0
 min_length:
+                 move       $a0, $s2
+                 li         $v0, 1
+                 syscall
 
 
-                 blt        $s2, $s4, new_min
+                 bne        $t0,$s1,remake            #if char index is  a space
 
-end_if_y:        move        $s3, $s4
-new_min:
+end_if_four:     li         $t1, 2                   # flag for min len conditional
+remake:
 
-                 bne        $t0,$s1,reboot
 
-end_if_d:       move       $s4, $s2
-                li         $s2, 0
-reboot:
+
+
+
+                 bne        $t1,2, min_len          #flag if we have finished the word
+
+end_if_d:        blt        $s3, $s2,move_smaller
+end_if_e:        move       $s3, $s2
+                 li         $s2, 0
+                 li         $t1, 0
+move_smaller:
+min_len:
+
+
 
 
                  addi       $s0, $s0, 1
@@ -205,17 +230,21 @@ reboot:
 
 
 
+
                 la      $a0, string_iv        #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
                 syscall
 
-                move    $a0, $s3        #Start addr of result.
+                move    $a0, $s3       #Start addr of result.
                 li      $v0, 1                 #print_int command.
                 syscall
 
                 la       $a0, nl           #start newline print
                 li       $v0, 4            #print_string command.
                 syscall
+
+
+
 
 
 
