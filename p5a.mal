@@ -13,6 +13,7 @@ right_count:    .word     0        # for the number of ones on the right side
 test:           .asciiz   "1"    # test for right and left variables
                 .text
                 .globl   main
+largest:        .word    0          #used to find largest number
 
 main:           la       $a0, prompt  #Start address of output string.
                 li       $v0, 4
@@ -65,28 +66,25 @@ elses:
                 bne $s1, 32, loop  # Keep looping if loop counter is not 32
 
 
-
-
-
                 beq $s6, $s5, else
                 
-odd_one:        move $s5, $zero
+odd_one:        move $s7, $zero
 else:
 
-                bne $s6, $s5, else_if
+
+
+                sw      $s4, largest
+loop_i:         rem     $s1, $16, 10   #get the largest digit
+                div     $16, $16, 10
+                bgt $s4, $s1, elsess
                 
-even_one:        move $s5, $16
-else_if:
+largest_one:    move $s4, $s1
+elsess:
+                bne     $16, 0, loop_i
 
 
 
 
-
-
-                la       $a0, nl           #start newline print
-                li       $v0, 4            #print_string command.
-                syscall
-          
                 la      $a0, string_ii         #Start addr of right statement.
                 li      $v0, 4                 #print_string command.
                 syscall
@@ -129,11 +127,13 @@ else_if:
                 syscall
                 
 
-                move    $a0, $s7        #Start addr of left statement.
+                move    $a0, $s4        #Start addr of left statement.
                 li      $v0, 1                 #print_int command.
                 syscall
                 
-
+                la       $a0, nl           #start newline print
+                li       $v0, 4            #print_string command.
+                syscall
 
                 li       $v0, 10    #exit command.
                 syscall
