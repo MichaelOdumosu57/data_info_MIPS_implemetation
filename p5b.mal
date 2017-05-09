@@ -87,7 +87,7 @@ num_words:
 
                 la        $s0, inchar
                 li        $s2, -2         #tring to get count for max len of word
-                li        $s3, 0         #tring to get length of word
+                li        $s3, 0         #tring to get max length of word
 
 
 
@@ -103,9 +103,9 @@ max_length:
 end_if_i:        li         $s2, -2
 restart:
 
-                 blt        $s3, $s2, new_max
+                 bgt        $s3, $s2, new_max
 
-end_if_x:        move        $3, $s2
+end_if_x:        move       $s3, $s2
 new_max:
 
                  addi       $s0, $s0, 1
@@ -117,7 +117,7 @@ new_max:
                 li      $v0, 4                 #print_string command.
                 syscall
 
-                move    $a0, $s2        #Start addr of result.
+                move    $a0, $s3       #Start addr of result.
                 li      $v0, 1                 #print_int command.
                 syscall
 
@@ -129,27 +129,30 @@ new_max:
 #part 4
 
                 la        $s0, inchar
-                li        $s2, -2         #tring to get count for max len of word
-                li        $s3, 0         #tring to get length of word
+                li        $s2, 0         #trying to get count for min len of word
+                li        $s3, 0         #trying to get min length of word
 
 
 
 loop_iv:        lbu        $t0, ($s0)
 
-                 beq        $t0,$s1,min_length
+                beq        $t0,$s1,min_length
 
 end_if_iv:      addi       $s2,$s2,1
 min_length:
 
+
+                 blt        $s2, $s4, new_min
+
+end_if_y:        move        $s3, $s4
+new_min:
+
                  bne        $t0,$s1,reboot
 
-end_if_d:        li         $s2, -2
+end_if_d:       move       $s4, $s2
+                li         $s2, 0
 reboot:
 
-                 blt        $s3, $s2, new_min
-
-end_if_y:        move        $3, $s2
-new_min:
 
                  addi       $s0, $s0, 1
                  bnez       $t0,loop_iv
@@ -160,13 +163,49 @@ new_min:
                 li      $v0, 4                 #print_string command.
                 syscall
 
-                move    $a0, $s2        #Start addr of result.
+                move    $a0, $s3        #Start addr of result.
                 li      $v0, 1                 #print_int command.
                 syscall
 
                 la       $a0, nl           #start newline print
                 li       $v0, 4            #print_string command.
                 syscall
+
+
+
+#part 5
+
+                la        $s0, inchar
+                li        $s2, -2         #tring to get count for max len of word
+                li        $s3, 0         #tring to get max length of word
+
+
+
+loop_v:          lbu        $t0, ($s0)
+
+                 beq        $t0,$s1,max_word
+
+end_if_v:        addi       $s2,$s2,1
+max_word:
+
+                 bne        $t0,$s1,refresh
+
+end_if_k:        li         $s2, -2
+refresh:
+
+                 bgt        $s3, $s2, word_max
+
+end_if_j:        move       $a0, $t0
+                
+word_max:
+
+                 addi       $s0, $s0, 1
+                 bnez       $t0,loop_v
+
+
+
+
+
 
                 la      $a0, string_v        #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
@@ -176,6 +215,7 @@ new_min:
                 li       $v0, 4            #print_string command.
                 syscall
 
+#part_6
                 la      $a0, string_vi        #Start addr of left statement.
                 li      $v0, 4                 #print_string command.
                 syscall
