@@ -1,3 +1,13 @@
+
+#Name: Michael Odumosu
+#Unix login id: mo422733
+#Lab Instructor Name: Julia Turner
+#Lab Day: Friday
+#Lab Time: 1:40pm
+
+#Project Description : this program takes in an integer and prints out four fields. It tells you the amount of zeros on the 16 bit left side the amount of ones on the 16 bit right side. The largest power of 2 that eveenly divides the nubmer and the largest digit of the number
+#
+
                 .data
 
 prompt:         .asciiz  "Type an integer: "

@@ -1,3 +1,14 @@
+
+
+#Name: Michael Odumosu
+#Unix login id: mo422733
+#Lab Instructor Name: Julia Turner
+#Lab Day: Friday
+#Lab Time: 1:40pm
+
+#Project Description : this program takes in an input string and prints out several operations with them. The program prints out the number of non-whitespace characters number of words, max len of a word, min length of a word and the word of maximum and minium length
+#
+
                 .data
 inchar:         .space    80
 prompt:         .asciiz  "Type a string: "
@@ -97,9 +108,35 @@ num_words:
                 li        $s2, 0            #tring to get count for max len of word
                 li        $s3, 0             #tring to get max length of word
 
+                move      $a0, $s0
+                li        $v0, 11
+                syscall
+
+                move      $a0, $s0
+                li        $v0, 1
+                syscall
+                
+                la       $a0, nl
+                li       $v0, 4
+                syscall
+
 
 loop_iii:
                  lbu        $t0, ($s0)                  #gets the string
+
+                move      $a0, $t0
+                li        $v0, 11
+                syscall
+
+                move      $a0, $t0
+                li        $v0, 1
+                syscall
+                
+                la       $a0, nl
+                li       $v0, 4
+                syscall
+
+
 
                  beq        $t0,$s1,max_length          #if char index is not a space
 
@@ -129,7 +166,7 @@ max_len:
 
                  addi       $s0, $s0, 1
                  addi       $s6, $s6, 1
-                 bnez       $t0, loop_iii
+                 bne        $t0,10, loop_iii
 
 
 
